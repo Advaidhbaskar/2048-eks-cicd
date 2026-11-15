@@ -43,6 +43,7 @@ pipeline {
             }
         }
 
+        
         stage('Push to Docker Hub') {
             steps {
                 withCredentials([
@@ -53,18 +54,19 @@ pipeline {
                     )
                 ]) {
                     bat '''
-                        @echo off
-                        echo %DOCKER_TOKEN% | docker login --username %DOCKER_USER% --password-stdin
-                        if errorlevel 1 exit /b 1
+                    @echo off
+                    powershell -NoProfile -NonInteractive -Command "$env:DOCKER_TOKEN | docker login --username $env:DOCKER_USER --password-stdin"
+                    if errorlevel 1 exit /b 1
 
-                        docker push %DOCKER_IMAGE%:%IMAGE_TAG%
-                        if errorlevel 1 exit /b 1
+                    docker push %DOCKER_IMAGE%:%IMAGE_TAG%
+                    if errorlevel 1 exit /b 1
 
-                        docker logout
-                    '''
+                    docker logout
+                '''
                 }
             }
         }
+
 
         stage('Connect to AWS EKS') {
             steps {
