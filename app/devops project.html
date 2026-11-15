@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>2048 Game - DevOps Project 08</title>
+    <meta name="description"
+        content="Play the modern 2048 puzzle game with sleek design, undo move, sound effects, and animations.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body data-theme="dark">
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+
+    <main class="game-wrapper">
+        <!-- Header Section -->
+        <header class="game-header">
+            <div class="header-left">
+                <h1 class="logo-title">2048</h1>
+                <div class="project-badge">
+                    <span class="badge-dot"></span>
+                    <span>DevOps Project 08 • EKS Ready</span>
+                </div>
+            </div>
+
+            <div class="header-right">
+                <div class="score-card" id="current-score-box">
+                    <span class="score-label">SCORE</span>
+                    <span class="score-value" id="score">0</span>
+                    <div class="score-addition-container" id="score-addition"></div>
+                </div>
+                <div class="score-card" id="best-score-box">
+                    <span class="score-label">BEST</span>
+                    <span class="score-value" id="best-score">0</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Subtitle & Action Toolbar -->
+        <section class="toolbar-section">
+            <p class="game-instructions">
+                Join the numbers to get to the <strong>2048 tile!</strong>
+            </p>
+
+            <div class="action-buttons">
+                <button id="undo-btn" class="btn btn-secondary" title="Undo Last Move" disabled>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 7v6h6"></path>
+                        <path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13"></path>
+                    </svg>
+                    <span>Undo</span>
+                </button>
+
+                <button id="sound-btn" class="btn btn-icon" title="Toggle Sound">
+                    <svg id="sound-icon-on" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                    </svg>
+                    <svg id="sound-icon-off" class="hidden" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                        <line x1="23" y1="9" x2="17" y2="15"></line>
+                        <line x1="17" y1="9" x2="23" y2="15"></line>
+                    </svg>
+                </button>
+
+                <button id="theme-btn" class="btn btn-icon" title="Toggle Theme">
+                    <svg id="theme-icon-dark" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <svg id="theme-icon-light" class="hidden" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
+
+                <button id="restart-btn" class="btn btn-primary" title="Start New Game">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="23 4 23 10 17 10"></polyline>
+                        <polyline points="1 20 1 14 7 14"></polyline>
+                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                    </svg>
+                    <span>New Game</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Main Game Board Container -->
+        <div class="board-container" id="board-container">
+            <div class="grid-background">
+                <div class="grid-row">
+                    <div class="grid-cell"></div>
+                    <div class="grid-cell"></div>
+                    <div class="grid-cell"></div>
+                    <div class="grid-cell"></div>
+                </div>
+                <div class="grid-row">
+                    <div class="grid-cell"></div>
+                    <div class="grid-cell"></div>
+                    <div class="grid-cell"></div>
+                    <div class="grid-cell"></div>
+                </div>
+                <div class="grid-row">
+                    <div class="grid-cell"></div>
+                    <div class="grid-cell"></div>
+                    <div class="grid-cell"></div>
+                    <div class="grid-cell"></div>
+                </div>
+                <div class="grid-row">
+                    <div class="grid-cell"></div>
+                    <div class="grid-cell"></div>
+                    <div class="grid-cell"></div>
+                    <div class="grid-cell"></div>
+                </div>
+            </div>
+
+            <!-- Dynamic Tile Container -->
+            <div class="tile-container" id="tile-container"></div>
+
+            <!-- Game Overlay (Game Over / You Win) -->
+            <div class="game-overlay hidden" id="game-overlay">
+                <div class="overlay-content">
+                    <div class="overlay-badge" id="overlay-badge">🎉 VICTORY!</div>
+                    <h2 class="overlay-title" id="overlay-title">You reached 2048!</h2>
+                    <p class="overlay-subtitle" id="overlay-subtitle">Amazing puzzle solving skills!</p>
+                    <div class="overlay-actions">
+                        <button id="overlay-keep-playing-btn" class="btn btn-secondary hidden">Keep Playing</button>
+                        <button id="overlay-retry-btn" class="btn btn-primary">Try Again</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Onscreen D-Pad for Mobile / Mouse control -->
+        <div class="controls-guide">
+            <div class="key-hint">
+                <span class="kbd">W</span><span class="kbd">A</span><span class="kbd">S</span><span class="kbd">D</span>
+                or
+                <span class="kbd">↑</span><span class="kbd">←</span><span class="kbd">↓</span><span class="kbd">→</span>
+                or Swipe
+            </div>
+            <div class="mobile-dpad" id="mobile-dpad">
+                <button class="dpad-btn dpad-up" id="dpad-up" aria-label="Move Up">▲</button>
+                <div class="dpad-mid">
+                    <button class="dpad-btn dpad-left" id="dpad-left" aria-label="Move Left">◀</button>
+                    <div class="dpad-center"></div>
+                    <button class="dpad-btn dpad-right" id="dpad-right" aria-label="Move Right">▶</button>
+                </div>
+                <button class="dpad-btn dpad-down" id="dpad-down" aria-label="Move Down">▼</button>
+            </div>
+        </div>
+
+        <!-- Footer DevOps Info -->
+        <footer class="game-footer">
+            <p>
+                Application containerized as <code>blackicebird/2048</code> • Deployed via Kubernetes Pod &amp; Service.
+            </p>
+        </footer>
+    </main>
+
+    <script src="game.js"></script>
+</body>
+
+</html>
